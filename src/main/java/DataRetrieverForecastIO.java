@@ -1,5 +1,6 @@
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -13,15 +14,13 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
-
-
 public class DataRetrieverForecastIO extends DataRetriever {
-    
+
     @Override
     public Map<String, double[]> getData(City city) {
 
         Map<String, double[]> dataMap = new HashMap<>();
+
         DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
         DateFormat dateFormat2 = new SimpleDateFormat("HH:mm:ss");
         DateFormat dateFormatCity = new SimpleDateFormat("dd.MM.yyyy");
@@ -41,15 +40,15 @@ public class DataRetrieverForecastIO extends DataRetriever {
             // sprawdzenie godzin w dniu
             double[] dataArray;
             if (i == 0) {
-                hours = Integer.parseInt(hourFormat.format(date));
-                dataArray = new double[hours + 1];
+                hours = Integer.parseInt(hourFormat.format(date)) + 1;
+                dataArray = new double[hours];
             } else {
                 hours = 24;
                 dataArray = new double[24];
             }
 
-            String urlString = url + APIkey + "/" + city.latitude + "," + city.longitude +
-                    "," + dateFormat1.format(dataDate) + "T" + dateFormat2.format(dataDate);
+            String urlString = url + APIkey + "/" + city.latitude + "," + city.longitude
+                    + "," + dateFormat1.format(dataDate) + "T" + dateFormat2.format(dataDate);
 
             try {
                 URL dataURL = new URL(urlString);
@@ -61,9 +60,12 @@ public class DataRetrieverForecastIO extends DataRetriever {
                 for (int j = 0; j < hours; j++) {
                     JSONObject rowJSON = array.getJSONObject(j);
                     // sprawdzenie czasu pomiaru (unix)
-                    Date tmpTime = new Date(rowJSON.getLong("time")*1000);
+                    Date tmpTime = new Date(rowJSON.getLong("time") * 1000);
                     // konwersja z Fahrenheit do Celcius
-                    dataArray[Integer.parseInt(hourFormat.format(tmpTime))] = ((rowJSON.getDouble("temperature")-32)*0.5555);
+                    double temp = ((rowJSON.getDouble("temperature") - 32) * 0.5555);
+                    // zaokrąglenie do 2 miejsc po przecinku i wpisanie do tablicy
+                    dataArray[Integer.parseInt(hourFormat.format(tmpTime))] = new BigDecimal(temp)
+                            .setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                 }
 
                 dataMap.put(cityDate, dataArray);
@@ -81,6 +83,5 @@ public class DataRetrieverForecastIO extends DataRetriever {
         this.APIkey = "307117bb3bde2374dc23fca1d38b38bf";
         this.url = "https://api.forecast.io/forecast/";
     }
-    
-    
+
 }
