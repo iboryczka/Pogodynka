@@ -1,4 +1,5 @@
 
+import java.awt.EventQueue;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +12,8 @@ public class main {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws FileNotFoundException {
-               
+              
+        /*
         String n = "Warszawa";
         String n2 = "Szczecin";
         Map<String, double[]> dataMap = new HashMap<>();
@@ -35,11 +37,21 @@ public class main {
         c.temperatureData = de.mergeData(dataList);
         c2.temperatureData = de.mergeData(dataList2);
         
+        c.meanTemperature = de.calculateMeanDaily(c.temperatureData);
+        c2.meanTemperature = de.calculateMeanDaily(c2.temperatureData);
+        
         lista.add(c);
         lista.add(c2);
         
         DataSaver saver = new DataSaver();
         saver.saveData(lista);
+        */
+        
+        EventQueue.invokeLater(() -> {
+            mainWindow window = new mainWindow();
+            window.setResizable(false);
+            window.setVisible(true);
+        });
         
     }
 }

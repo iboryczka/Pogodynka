@@ -12,6 +12,7 @@ public class City {
     double latitude;
     
     Map<String, double[]> temperatureData;
+    Map<String, Double> meanTemperature;
 
     @Override
     public String toString() {
