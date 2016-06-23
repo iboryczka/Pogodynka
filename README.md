@@ -7,7 +7,8 @@ Zrealizowano:
 + Możliwośc dodawania i usuwania miast,
 + Wyświetlanie temperatury o danej godzinie,
 + Zapis danych do pliku tekstowego,
-+ Podstawowe GUI.
++ Podstawowe GUI,
++ Kompilacja z Gradle.
 
 
 Iga Boryczka
